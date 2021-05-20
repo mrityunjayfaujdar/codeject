@@ -1,6 +1,7 @@
 const express = require("express");
 const app = express();
 const expressLayout = require("express-ejs-layouts");
+const connectToDB = require("./config/mongoose");
 
 const PORT = process.env.PORT || 5000;
 
@@ -20,6 +21,9 @@ app.set("views", "./views");
 
 //middleware for requrest coming from client.
 app.use(express.urlencoded({ extended: false }));
+
+//connect to Database
+connectToDB();
 
 //use the router middleware
 app.use("/", require("./routes"));
