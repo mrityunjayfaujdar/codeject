@@ -10,6 +10,10 @@ app.use(express.static("assets"));
 //Rendering Variable Layout
 app.use(expressLayout);
 
+//extract styles and scripts of individual pages and put it in layout.ejs
+app.set("layout extractStyles", true);
+app.set("layout extractScripts", true);
+
 //setting up view engine - EJS
 app.set("view engine", "ejs");
 app.set("views", "./views");
