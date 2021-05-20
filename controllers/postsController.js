@@ -1,3 +1,5 @@
 module.exports.post = (req, res) => {
-  return res.send("<h1>Post Rendered</h1>");
+  return res.render("posts", {
+    title: "Post",
+  });
 };
