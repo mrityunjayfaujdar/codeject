@@ -2,8 +2,15 @@ const express = require("express");
 const app = express();
 const expressLayout = require("express-ejs-layouts");
 const connectToDB = require("./config/mongoose");
+const cookieParser = require("cookie-parser");
 
 const PORT = process.env.PORT || 5000;
+
+//Middleware for incoming request from the client - Parsing body
+app.use(express.urlencoded({ extended: false }));
+
+//This is needed to get incoming cookies from the browser.
+app.use(cookieParser());
 
 //setting up the static assets folder.
 app.use(express.static("assets"));
