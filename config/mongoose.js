@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 
 const databaseURL = "mongodb://localhost/codeject_dev";
+
 const connectToDB = async () => {
   try {
     await mongoose.connect(databaseURL, {
@@ -14,4 +15,7 @@ const connectToDB = async () => {
   }
 };
 
-module.exports = connectToDB;
+module.exports = {
+  connectToDB,
+  databaseURL,
+};

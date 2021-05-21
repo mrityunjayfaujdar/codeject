@@ -1,10 +1,22 @@
 const express = require("express");
 const app = express();
 const expressLayout = require("express-ejs-layouts");
-const connectToDB = require("./config/mongoose");
+const { connectToDB, databaseURL } = require("./config/mongoose");
 const cookieParser = require("cookie-parser");
 
+//used for session cookies
+const session = require("express-session");
+const passport = require("passport");
+const passportLocal = require("./config/passport-local-strategy");
+
+//used to store session details in MongoStore
+const MongoStore = require("connect-mongo");
+// const MongoStore = require("connect-mongo")(session); // -** Depricated Approach
+
 const PORT = process.env.PORT || 5000;
+
+//connect to Database
+connectToDB();
 
 //Middleware for incoming request from the client - Parsing body
 app.use(express.urlencoded({ extended: false }));
@@ -18,6 +30,9 @@ app.use(express.static("assets"));
 //Rendering Variable Layout
 app.use(expressLayout);
 
+//middleware for requrest coming from client.
+app.use(express.urlencoded({ extended: false }));
+
 //extract styles and scripts of individual pages and put it in layout.ejs
 app.set("layout extractStyles", true);
 app.set("layout extractScripts", true);
@@ -26,13 +41,37 @@ app.set("layout extractScripts", true);
 app.set("view engine", "ejs");
 app.set("views", "./views");
 
-//middleware for requrest coming from client.
-app.use(express.urlencoded({ extended: false }));
+//MongoStore is used to store the session cookie in the DB
+app.use(
+  session({
+    name: "codeject",
+    // TODO - Change secret before deployment
+    secret: "mohit",
+    saveUninitialized: false,
+    resave: false,
+    cookie: {
+      maxAge: 1000 * 60 * 100,
+    },
+    store: MongoStore.create(
+      {
+        mongoUrl: databaseURL,
+        autoRemove: "disabled",
+      },
+      function (err) {
+        if (err) {
+          console.log(err || "connect-mongodb MongoStore Setup - OK");
+        }
+      }
+    ),
+  })
+);
 
-//connect to Database
-connectToDB();
+app.use(passport.initialize());
+app.use(passport.session());
 
-//use the router middleware
+app.use(passport.setAuthenticatedUser);
+
+//use the router middleware - Prefer use at end
 app.use("/", require("./routes"));
 
 app.listen(PORT, (error) => {

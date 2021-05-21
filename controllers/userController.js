@@ -2,17 +2,23 @@ const User = require("../models/User");
 
 module.exports.profile = (req, res) => {
   return res.render("user_profile", {
-    title: "Users",
+    title: "Users Profile",
   });
 };
 
 module.exports.registerUser = (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.redirect("/users/profile");
+  }
   return res.render("user_register", {
     title: "Codeject | Register",
   });
 };
 
 module.exports.signInUser = (req, res) => {
+  if (req.isAuthenticated()) {
+    return res.redirect("/users/profile");
+  }
   return res.render("user_sign_in", {
     title: "Codeject | SignIn",
   });
@@ -52,5 +58,10 @@ module.exports.createUser = (req, res) => {
 };
 
 module.exports.createSession = (req, res) => {
-  //TODO later
+  res.redirect("/");
+};
+
+module.exports.destroySession = (req, res) => {
+  req.logout();
+  res.redirect("/");
 };
