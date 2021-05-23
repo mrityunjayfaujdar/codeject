@@ -1,3 +1,25 @@
 <h1>
     Codeject / <%= title %>
 </h1>
+
+<section id='feed-posts'>
+    <h4>Posts</h4>
+    <form action="/posts/create-post" id="new-post-form" method="POST">
+        <textarea name="content" id="" cols="30" rows="3" placeholder="Write Post Here..."></textarea>
+        <input type="submit" value="Post"> 
+    </form>
+
+    <div id='posts-list-container'>
+        <h4> Posts: </h4>
+        <ul>
+            <% for(post of posts) { %>
+                <li>
+                    <%= post.content %>
+                </li>
+            <% } %>   
+        </ul>
+    </div>
+    
+</section>
+
+
