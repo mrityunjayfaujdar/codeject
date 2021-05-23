@@ -6,7 +6,7 @@
     <h4>Posts</h4>
     <% if (locals.user) { %> 
     <form action="/posts/create-post" id="new-post-form" method="POST">
-        <textarea name="content" id="" cols="30" rows="3" placeholder="Write Post Here..."></textarea>
+        <textarea required name="content" id="" cols="30" rows="3" placeholder="Write Post Here..."></textarea>
         <input type="submit" value="Post"> 
     </form>
 
@@ -19,6 +19,29 @@
                     <p>
                     <%= post.content %> <small> - <%= post.user.name %> </small>
                     </p>
+                    <div class="post-comments">
+                        <% if (locals.user) { %> 
+                            <form action="/comments/create-comment" method="POST">
+                                <input required type="text" name="content" placeholder="Type Comment...">
+                                <input type="hidden" name="post" value="<%=post._id%>" >
+                                <input type="submit" value="Add Comment">
+                            </form>        
+                        <% } %>
+
+                        <!-- Displaying the Comments for a post -->
+                        <div class='post-comments-list'>
+                            <ul id='post-comments-<%=post._id%>'>
+                                <% for (comment of post.comments) { %> 
+                                    <p>
+                                        <%= comment.content %>
+                                        <small>
+                                            -<%= comment.user.name %>
+                                        </small>
+                                    </p>
+                                <%} %>
+                            </ul>
+                        </div>
+                    </div>
                 </li>
             <% } %>   
         </ul>
