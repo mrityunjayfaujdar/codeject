@@ -13,8 +13,10 @@
         <h4> Posts: </h4>
         <ul>
             <% for(post of posts) { %>
-                <li>
-                    <%= post.content %>
+                <li> 
+                    <p>
+                    <%= post.content %> <small> - <%= post.user.name %> </small>
+                    </p>
                 </li>
             <% } %>   
         </ul>
