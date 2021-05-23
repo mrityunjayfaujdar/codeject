@@ -22,3 +22,29 @@ module.exports.createComment = (req, res) => {
         );
     });
 };
+
+module.exports.destroy = (req, res) => {
+    //find the comment
+    Comment.findById(req.params.id, (err, comment) => {
+        if (err) {
+            console.log("Error Searching for Comment - Delete comment");
+            return;
+        }
+        if (comment.user == req.user.id) {
+            //save the post Id first.
+            let postId = comment.post;
+            //this will delete only the comment
+            comment.remove();
+            //need to remove comment refrence from post
+            Post.findByIdAndUpdate(
+                postId,
+                {$pull: {comments: req.params.id}},
+                (err, posr) => {
+                    return res.redirect("back");
+                }
+            );
+        } else {
+            return res.redirect("back");
+        }
+    });
+};

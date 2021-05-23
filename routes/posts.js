@@ -9,4 +9,10 @@ router.post(
     postController.createPost
 );
 
+router.get(
+    "/destroy/:id",
+    passport.checkAuthentication,
+    postController.destroy
+);
+
 module.exports = router;
